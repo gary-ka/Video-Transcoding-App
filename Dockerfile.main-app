@@ -1,0 +1,30 @@
+# Use a base image with Node.js
+FROM node:18
+
+# Install ffmpeg
+# RUN apt-get update && apt-get install -y ffmpeg
+
+# Create app directory
+WORKDIR /app
+
+# Copy the client and server directories into the Docker image
+COPY ./client ./client
+COPY ./server ./server
+COPY ./client/.env ./client/.env
+COPY ./server/.env ./server/.env
+
+# Install dependencies for both client and server
+WORKDIR /app/client
+RUN npm install
+
+WORKDIR /app/server
+RUN npm install
+
+# Set the working directory back to /app
+WORKDIR /app
+
+# Define the command to start both the server and client
+CMD ["sh", "-c", "cd /app/server && npm start & cd /app/client && npm run dev"]
+
+# Expose ports
+EXPOSE 3000 8000

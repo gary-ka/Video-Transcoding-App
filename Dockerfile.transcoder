@@ -1,0 +1,21 @@
+# Use a base image with Node.js
+FROM node:18
+
+# Install ffmpeg (required for video transcoding)
+RUN apt-get update && apt-get install -y ffmpeg
+
+# Create app directory for the transcoder service
+WORKDIR /transcoder-service
+
+# Copy the contents of the transcoder-service directory into the image
+COPY . .
+COPY .env ./
+
+# Install dependencies for the transcoder service
+RUN npm install
+
+# Define the command to start the transcoder service
+CMD ["node", "index.js"]
+
+# Expose the transcoder service port
+EXPOSE 5001
